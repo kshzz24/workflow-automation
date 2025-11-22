@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const registerSchema = z
   .object({
@@ -89,6 +90,12 @@ export function RegisterForm() {
                     type="button"
                     disabled={isPending}
                   >
+                    <Image
+                      src="/google.svg"
+                      width={20}
+                      height={20}
+                      alt="google"
+                    />
                     Continue with Google
                   </Button>
                 </div>
@@ -99,6 +106,12 @@ export function RegisterForm() {
                     type="button"
                     disabled={isPending}
                   >
+                    <Image
+                      src="/github.svg"
+                      width={20}
+                      height={20}
+                      alt="github"
+                    />
                     Continue with Github
                   </Button>
                 </div>
