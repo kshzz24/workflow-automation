@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { requireAuth } from "@/lib/auth-utils";
 
 const Page = async () => {
@@ -6,6 +7,7 @@ const Page = async () => {
   return (
     <div className="min-h-screen min-w-screen flex items-center justify-center">
       protected server component
+      <Button>Logout</Button>
     </div>
   );
 };
