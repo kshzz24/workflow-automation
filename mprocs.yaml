@@ -1,0 +1,3 @@
+procs:
+  inngest: npm run inngest:dev
+  next: npm run dev
