@@ -7,12 +7,6 @@ import {
 import { toast } from "sonner";
 import { useWorkflowParams } from "./use-workflows-params";
 
-export const useSuspenseWorkflows = () => {
-  const trpc = useTRPC();
-  const [params] = useWorkflowParams();
-  return useSuspenseQuery(trpc.workflows.getMany.queryOptions(params));
-};
-
 export const useCreateWorkflow = () => {
   const queryClient = useQueryClient();
   const trpc = useTRPC();
@@ -31,6 +25,12 @@ export const useCreateWorkflow = () => {
   );
 };
 
+export const useSuspenseWorkflows = () => {
+  const trpc = useTRPC();
+  const [params] = useWorkflowParams();
+  return useSuspenseQuery(trpc.workflows.getMany.queryOptions(params));
+};
+
 export const useRemoveWorkflow = () => {
   const queryClient = useQueryClient();
   const trpc = useTRPC();
@@ -38,7 +38,7 @@ export const useRemoveWorkflow = () => {
   return useMutation(
     trpc.workflows.remove.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Worflow ${data.name} removed`);
+        toast.success(`Workflow ${data.name} removed`);
         queryClient.invalidateQueries(trpc.workflows.getMany.queryOptions({}));
         queryClient.invalidateQueries(
           trpc.workflows.getOne.queryFilter({ id: data.id })
@@ -47,3 +47,33 @@ export const useRemoveWorkflow = () => {
     })
   );
 };
+
+export const useSuspenseWorkflow = (id: string) => {
+  const trpc = useTRPC();
+  return useSuspenseQuery(trpc.workflows.getOne.queryOptions({ id }));
+};
+
+export const useUpdateWorkflowName = () => {
+  const queryClient = useQueryClient();
+  const trpc = useTRPC();
+
+  return useMutation(
+    trpc.workflows.updateName.mutationOptions({
+      onSuccess: (data) => {
+        toast.success(`Workflow ${data.name} updated`);
+        queryClient.invalidateQueries(trpc.workflows.getMany.queryOptions({}));
+        queryClient.invalidateQueries(
+          trpc.workflows.getOne.queryFilter({ id: data.id })
+        );
+      },
+      onError: (error) => {
+        toast.error(`Failed to update workflow ${error.message}`);
+      },
+    })
+  );
+};
+
+// export const useSuspenseUpdateWorkflow = (id: string, name: string) => {
+//   const trpc = useTRPC();
+//   return useSuspenseQuery(trpc.workflows.updateName.queryOptions({ id, name }));
+// };
