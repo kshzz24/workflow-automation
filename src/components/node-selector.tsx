@@ -57,8 +57,44 @@ export function NodeSelector({
   onOpenChange,
   children,
 }: NodeSelectorProps) {
+  const { setNodes, getNodes, screenToFlowPosition } = useReactFlow();
+  const handleNodeSelect = useCallback(
+    (selection: NodeTypeOption) => {
+      if (selection.type === NodeType.MANUAL_TRIGGER) {
+        const nodes = getNodes();
+        const hasManualTrigger = nodes.some(
+          (node) => node.type == NodeType.MANUAL_TRIGGER
+        );
+        if (hasManualTrigger) {
+          toast.error("Only one manual trigger is allowed");
+          return;
+        }
+      }
+      setNodes((nodes) => {
+        const hasInitialTrigger = nodes.some(
+          (node) => node.type === NodeType.INITIAL
+        );
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const position = screenToFlowPosition({
+          x: centerX + (Math.random() - 0.5) * 200,
+          y: centerY + (Math.random() - 0.5) * 200,
+        });
 
-    const 
+        const newNode = {
+          id: createId(),
+          data: {},
+          type: selection.type,
+          position,
+        };
+        if (hasInitialTrigger) return [newNode];
+        return [...nodes, newNode];
+      });
+      onOpenChange(false);
+    },
+    [setNodes, onOpenChange, getNodes, screenToFlowPosition]
+  );
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>{children}</SheetTrigger>
@@ -75,7 +111,7 @@ export function NodeSelector({
             return (
               <div
                 key={nodeType.type}
-                onClick={() => {}}
+                onClick={() => handleNodeSelect(nodeType)}
                 className="w-full justify-start h-auto py-5 px-4 rounded-none cursor-pointer border-l-2 border-transparent
              hover:border-l-primary "
               >
@@ -109,7 +145,7 @@ export function NodeSelector({
             return (
               <div
                 key={nodeType.type}
-                onClick={() => {}}
+                onClick={() => handleNodeSelect(nodeType)}
                 className="w-full justify-start h-auto py-5 px-4 rounded-none cursor-pointer border-l-2 border-transparent
              hover:border-l-primary "
               >
