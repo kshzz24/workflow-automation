@@ -2,7 +2,7 @@
 
 import { ErrorView, LoadingView } from "@/components/entity-components";
 import { useSuspenseWorkflow } from "@/features/workflows/hooks/use-workflows";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useAtom } from "jotai";
 import { editorAtom } from "@/features/editor/store/atoms";
 import {
@@ -24,6 +24,8 @@ import "@xyflow/react/dist/style.css";
 import { nodeComponents } from "@/config/node-components";
 import { AddNodeButton } from "./add-node-button";
 import { useSetAtom } from "jotai";
+import { NodeType } from "@/generated/prisma";
+import { ExecutionWorkflowButton } from "./execution-workflow-button";
 
 export const EditorError = () => {
   return <ErrorView message="Error loading Editor" />;
@@ -59,6 +61,10 @@ export const Editor = ({ workflowId }: { workflowId: string }) => {
     []
   );
 
+  const hasManualTrigger = useMemo(() => {
+    return nodes.some((node) => node.type === NodeType.MANUAL_TRIGGER);
+  }, [nodes]);
+
   return (
     <div className="size-full">
       <ReactFlow
@@ -82,6 +88,11 @@ export const Editor = ({ workflowId }: { workflowId: string }) => {
         <Background />
         <Controls />
         <MiniMap />
+        {hasManualTrigger && (
+          <Panel position="bottom-center">
+            <ExecutionWorkflowButton workflowId={workflowId} />
+          </Panel>
+        )}
         <Panel position="top-right">
           <AddNodeButton />
         </Panel>
