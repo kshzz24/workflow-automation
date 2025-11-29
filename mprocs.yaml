@@ -1,3 +1,4 @@
 procs:
+  ngrok: npm run ngrok:dev
   inngest: npm run inngest:dev
   next: npm run dev
