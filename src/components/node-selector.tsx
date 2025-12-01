@@ -32,15 +32,6 @@ const triggerNodes: NodeTypeOption[] = [
       "Runs the flow on clicking a button. Good for getting started quickly",
     icon: MousePointerIcon,
   },
-];
-
-const executionNodes: NodeTypeOption[] = [
-  {
-    type: NodeType.HTTP_REQUEST,
-    label: "HTTP Request",
-    description: "Makes an HTTP Request",
-    icon: GlobeIcon,
-  },
   {
     type: NodeType.GOOGLE_FORM_TRIGGER,
     label: "Google Form Trigger",
@@ -52,6 +43,33 @@ const executionNodes: NodeTypeOption[] = [
     label: "Stripe Trigger",
     description: "Runs when a Stripe event is triggered",
     icon: "/stripe.svg",
+  },
+];
+
+const executionNodes: NodeTypeOption[] = [
+  {
+    type: NodeType.HTTP_REQUEST,
+    label: "HTTP Request",
+    description: "Makes an HTTP Request",
+    icon: GlobeIcon,
+  },
+  {
+    type: NodeType.GEMINI,
+    label: "Gemini",
+    description: "Use google Gemini to generate text",
+    icon: "/gemini.svg",
+  },
+  {
+    type: NodeType.OPENAI,
+    label: "OpenAI",
+    description: "Use OpenAI to generate text",
+    icon: "/openai.svg",
+  },
+  {
+    type: NodeType.ANTHROPIC,
+    label: "Anthropic",
+    description: "Use Anthropic to generate text",
+    icon: "/anthropic.svg",
   },
 ];
 
