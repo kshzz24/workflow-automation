@@ -7,10 +7,12 @@ import React, { useCallback } from "react";
 import { toast } from "sonner";
 
 import {
-  Sheet, SheetContent,
-  SheetDescription, SheetHeader,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
   SheetTitle,
-  SheetTrigger
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { NodeType } from "@/generated/prisma";
 import { Separator } from "./ui/separator";
@@ -43,7 +45,13 @@ const executionNodes: NodeTypeOption[] = [
     type: NodeType.GOOGLE_FORM_TRIGGER,
     label: "Google Form Trigger",
     description: "Runs when a Google Form is submitted",
-    icon: '/googleform.svg',
+    icon: "/googleform.svg",
+  },
+  {
+    type: NodeType.STRIPE_TRIGGER,
+    label: "Stripe Trigger",
+    description: "Runs when a Stripe event is triggered",
+    icon: "/stripe.svg",
   },
 ];
 
