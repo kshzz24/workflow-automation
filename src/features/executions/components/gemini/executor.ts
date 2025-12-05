@@ -4,6 +4,7 @@ import Handlebars from "handlebars";
 import { generateText } from "ai";
 import { geminiTriggerChannel } from "@/inngest/channels/gemini-trigger";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import prisma from "@/lib/db";
 
 Handlebars.registerHelper("json", function (context) {
   const stringified = JSON.stringify(context, null, 2);
@@ -15,6 +16,7 @@ type GeminiData = {
   variableName?: string;
   model?: string;
   systemPrompt?: string;
+  credentialId?: string;
   userPrompt?: string;
 };
 
@@ -51,6 +53,16 @@ export const geminiExecutor: NodeExecutor<GeminiData> = async ({
     throw new NonRetriableError("Variable name is required");
   }
 
+  if (!data.credentialId) {
+    await publish(
+      geminiTriggerChannel().status({
+        nodeId,
+        status: "error",
+      })
+    );
+    throw new NonRetriableError("Credential is required");
+  }
+
   if (!data.userPrompt) {
     await publish(
       geminiTriggerChannel().status({
@@ -68,10 +80,21 @@ export const geminiExecutor: NodeExecutor<GeminiData> = async ({
     ? Handlebars.compile(data.userPrompt)(context)
     : "";
 
-  const credentialValue = process.env.GOOGLE_GENERATIVE_AI_API_KEY!;
+  const credential = await step.run("get-credential", () => {
+    return prisma.credential.findUnique({
+      where: {
+        id: data.credentialId,
+      },
+    });
+  });
+
+  if (!credential) {
+    throw new NonRetriableError("Credential not found");
+  }
+  // const credentialValue = process.env.GOOGLE_GENERATIVE_AI_API_KEY!;
 
   const google = createGoogleGenerativeAI({
-    apiKey: credentialValue,
+    apiKey: credential.value,
   });
 
   try {

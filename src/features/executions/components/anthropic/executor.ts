@@ -4,6 +4,7 @@ import Handlebars from "handlebars";
 import { generateText } from "ai";
 import { anthropicTriggerChannel } from "@/inngest/channels/anthropic-trigger";
 import { createAnthropic } from "@ai-sdk/anthropic";
+import prisma from "@/lib/db";
 
 Handlebars.registerHelper("json", function (context) {
   const stringified = JSON.stringify(context, null, 2);
@@ -16,6 +17,7 @@ type AnthropicData = {
   model?: string;
   systemPrompt?: string;
   userPrompt?: string;
+  credentialId?: string;
 };
 
 export const anthropicExecutor: NodeExecutor<AnthropicData> = async ({
@@ -41,6 +43,16 @@ export const anthropicExecutor: NodeExecutor<AnthropicData> = async ({
     );
     throw new NonRetriableError("Model is required");
   }
+  if (!data.credentialId) {
+    await publish(
+      anthropicTriggerChannel().status({
+        nodeId,
+        status: "error",
+      })
+    );
+    throw new NonRetriableError("Credential is required");
+  }
+
   if (!data.variableName) {
     await publish(
       anthropicTriggerChannel().status({
@@ -68,7 +80,19 @@ export const anthropicExecutor: NodeExecutor<AnthropicData> = async ({
     ? Handlebars.compile(data.userPrompt)(context)
     : "";
 
-  const credentialValue = process.env.OPENAI_API_KEY!;
+  const credential = await step.run("get-credential", () => {
+    return prisma.credential.findUnique({
+      where: {
+        id: data.credentialId,
+      },
+    });
+  });
+
+  if (!credential) {
+    throw new NonRetriableError("Credential not found");
+  }
+
+  const credentialValue = credential.value;
 
   const anthropic = createAnthropic({
     apiKey: credentialValue,
