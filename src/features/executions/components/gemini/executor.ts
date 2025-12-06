@@ -25,6 +25,7 @@ export const geminiExecutor: NodeExecutor<GeminiData> = async ({
   context,
   nodeId,
   step,
+  userId,
   publish,
 }) => {
   await publish(
@@ -84,11 +85,18 @@ export const geminiExecutor: NodeExecutor<GeminiData> = async ({
     return prisma.credential.findUnique({
       where: {
         id: data.credentialId,
+        userId,
       },
     });
   });
 
   if (!credential) {
+    await publish(
+      geminiTriggerChannel().status({
+        nodeId,
+        status: "error",
+      })
+    );
     throw new NonRetriableError("Credential not found");
   }
   // const credentialValue = process.env.GOOGLE_GENERATIVE_AI_API_KEY!;
