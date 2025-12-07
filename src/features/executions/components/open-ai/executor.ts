@@ -5,6 +5,7 @@ import { generateText } from "ai";
 import { openAiTriggerChannel } from "@/inngest/channels/open-ai-trigger";
 import { createOpenAI } from "@ai-sdk/openai";
 import prisma from "@/lib/db";
+import { decrypt } from "@/lib/encryption";
 
 Handlebars.registerHelper("json", function (context) {
   const stringified = JSON.stringify(context, null, 2);
@@ -102,7 +103,7 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
   const credentialValue = credential.value;
 
   const openAi = createOpenAI({
-    apiKey: credentialValue,
+    apiKey: decrypt(credentialValue),
   });
 
   try {
