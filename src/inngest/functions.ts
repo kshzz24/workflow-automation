@@ -1,6 +1,5 @@
 import { NonRetriableError } from "inngest";
 import { inngest } from "./client";
-import { includes } from "zod";
 import prisma from "@/lib/db";
 import { topoSort } from "./utils";
 import { ExecutionStatus, NodeType } from "@/generated/prisma";
@@ -18,8 +17,8 @@ import { slackTriggerChannel } from "./channels/slack-trigger";
 export const executeWorkflow = inngest.createFunction(
   {
     id: "execute-workflow",
-    retries: 0,
-    onFailure: async ({ step, event }) => {
+    retries: 3,
+    onFailure: async ({ event }) => {
       return prisma.execution.update({
         where: { inngestEventId: event.data.event.id },
         data: {
