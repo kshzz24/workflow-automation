@@ -51,8 +51,8 @@ const AppSidebar = () => {
         <SidebarMenuItem>
           <SidebarMenuButton asChild className="gap-x-4 h-10 px-4">
             <Link prefetch href={"/workflows"}>
-              <Image src={"/logo.svg"} alt="Nodebase" width={30} height={30} />
-              <span className="font-semibold text-sm">Nodebase</span>
+              <Image src={"/logo.svg"} alt="KshzzFlow" width={30} height={30} />
+              <span className="font-semibold text-sm">KshzzFlow</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>

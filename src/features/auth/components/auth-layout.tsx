@@ -9,8 +9,8 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           href={"/"}
           className="flex items-center gap-2 self-center font-medium"
         >
-          <Image src="/logo.svg" alt="Nodebase" width={30} height={30} />
-          Nodebase
+          <Image src="/logo.svg" alt="KshzzFlow" width={30} height={30} />
+          KshzzFlow
         </Link>
         {children}{" "}
       </div>
