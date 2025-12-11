@@ -189,6 +189,23 @@ export function LoginForm() {
                     Sign up
                   </Link>
                 </div>
+                <div className="flex flex-col gap-2 justify-center">
+                  <div>Use Premium Demo Account for Overview</div>
+                  <div className="flex gap-2 items-center">
+                    <div className="">Email:</div>
+                    <div className="text-muted-foreground ">
+                      trialaccount@temp.com
+                    </div>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <div className="">Password:</div>
+                    <div className="text-muted-foreground">Password@123</div>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    I know it's not ideal 😅, AI nodes need your own API keys,
+                    mine are cooked 💀
+                  </div>
+                </div>
               </div>
             </form>
           </Form>

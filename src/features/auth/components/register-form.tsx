@@ -212,7 +212,7 @@ export function RegisterForm() {
                     href={"/login"}
                     className="underline underline-offset-4"
                   >
-                    Login in
+                    Login
                   </Link>
                 </div>
               </div>
